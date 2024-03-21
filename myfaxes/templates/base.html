@@ -5,42 +5,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Votre Application{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
+    
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'accueil' %}">Université de Maroua</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="{% url 'accueil' %}">Accueil <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'liste_sujets' %}">Sujets</a>
-                    </li>
-                    <!-- Ajoutez d'autres liens de navigation ici -->
-                </ul>
-            </div>
-        </div>
+        <a class="navbar-brand" href="{% url 'accueil' %}">Université de Maroua</a>
+        <nav>
+            <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+            <label for="menu-toggle" class="hamburger">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </label>
+            
+            <ul class="nav-menu">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'accueil' %}">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'liste_sujets' %}">Sujets</a>
+                </li>
+            </ul>
+        </nav>
     </nav>
 
     {% block content %}
     <!-- Contenu principal -->
     {% endblock %}
 
-    {% block footer %}
     <footer>
-        <p>© Université de Maroua - Faculté des Sciences. Tous droits réservés.</p>
+        <p>© {{ current_year }} Université de Maroua - Faculté des Sciences. Tous droits réservés.</p>
     </footer>
-    {% endblock %}
-
-
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>
