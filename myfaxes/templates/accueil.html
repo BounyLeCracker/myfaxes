@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Accueil - Faculté des Sciences
+{% endblock %}
+
+{% block header %}
+Bienvenue à la Faculté des Sciences de l'Université de Maroua
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Consultation des Sujets en Ligne</h2>
+    <p>Cette plateforme permet aux étudiants de consulter les anciens sujets d'examen, de travaux pratiques et de contrôles continus.</p>
+    <div>
+        <h3>Accéder aux sujets</h3>
+        <p>Pour trouver un sujet, sélectionnez le cours dans la liste ci-dessous :</p>
+        <form action="{% url 'liste_sujets' %}" method="get">
+            <select name="cours" required>
+                <option value="">Choisir un cours</option>
+                {% for cours in cours_list %}
+                <option value="{{ cours.code }}">{{ cours.nom }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Rechercher</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<p>© {{ current_year }} Université de Maroua - Faculté des Sciences. Tous droits réservés.</p>
+{% endblock %}

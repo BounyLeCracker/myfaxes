@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Liste des Sujets</h2>
+<ul>
+    {% for sujet in sujets %}
+    <li>
+        <a href="{% url 'detail_sujet' sujet.id %}">{{ sujet.titre }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

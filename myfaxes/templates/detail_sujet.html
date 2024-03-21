@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ sujet.titre }}</h2>
+<p>Type: {{ sujet.type_sujet }}</p>
+<p>Cours: {{ sujet.cours.nom }}</p>
+<p>Année: {{ sujet.annee }}</p>
+<a href="{{ sujet.fichier.url }}">Télécharger le sujet</a>
+{% endblock %}

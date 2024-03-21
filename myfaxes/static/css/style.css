@@ -1,0 +1,79 @@
+/* Réinitialisation de base pour assurer la cohérence entre les navigateurs */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Police de base et couleurs */
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #333;
+    background-color: #ecf0f1;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* En-tête */
+header {
+    background: #34495e;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+/* Barre de navigation */
+nav {
+    display: flex;
+    justify-content: center;
+    background: #34495e;
+    padding: 10px 0;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    padding: 0 15px;
+    text-transform: uppercase;
+}
+
+nav a:hover {
+    background: #2980b9;
+}
+
+/* Contenu principal */
+main {
+    margin-top: 20px;
+}
+
+/* Pied de page */
+footer {
+    background: #34495e;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Media queries pour la responsivité */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+    }
+
+    nav a {
+        padding: 10px 0;
+    }
+}
+
+/* Ajoutez d'autres styles personnalisés ici */
