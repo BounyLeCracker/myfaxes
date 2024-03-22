@@ -1,0 +1,13 @@
+<!-- register_etudiant.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Inscription Étudiant</h2>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">S'inscrire</button>
+    </form>
+</div>
+{% endblock %}

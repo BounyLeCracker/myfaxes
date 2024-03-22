@@ -7,6 +7,10 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Cours, Sujet
 from .forms import SujetForm
+from django.contrib.auth.decorators import login_required, permission_required
+from .models import EtudiantRegistrationForm
+from django.contrib import messages
+
 
 
 def connexion(request):
@@ -41,17 +45,28 @@ def detail_sujet(request, sujet_id):
         return render(request, '404.html', status=404)
     return render(request, 'detail_sujet.html', {'sujet': sujet})
 
-@login_required
+@login_required(login_url='accueil')  # Redirige vers 'accueil' si l'utilisateur n'est pas connecté
+@permission_required('app.add_sujet', raise_exception=True)
 def ajouter_sujet(request):
-    if not request.user.has_perm('app.add_sujet'):
-        raise PermissionDenied
     if request.method == 'POST':
         form = SujetForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            # Ajouter un message de succès
+            sujet = form.save(commit=False)
+            sujet.utilisateur = request.user
+            sujet.save()
             messages.success(request, 'Le sujet a été ajouté avec succès.')
             return redirect('liste_sujets')
     else:
         form = SujetForm()
     return render(request, 'ajouter_sujet.html', {'form': form})
+
+def register_etudiant(request):
+    if request.method == 'POST':
+        form = EtudiantRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Votre compte a été créé avec succès ! Vous pouvez maintenant vous connecter.')
+            return redirect('etudiant_login')  # Redirigez vers la page de connexion
+    else:
+        form = EtudiantRegistrationForm()
+    return render(request, 'register_etudiant.html', {'form': form})

@@ -3,7 +3,6 @@ from django.contrib.auth.forms import AuthenticationForm
 from .models import Sujet
 
 class ConnexionForm(AuthenticationForm):
-    # Vous pouvez ajouter des personnalisations ici si nécessaire
     pass
 
 class SujetForm(forms.ModelForm):
