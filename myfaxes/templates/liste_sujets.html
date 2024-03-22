@@ -1,12 +1,15 @@
+<!-- liste_sujets.html -->
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Liste des Sujets</h2>
-<ul>
-    {% for sujet in sujets %}
-    <li>
-        <a href="{% url 'detail_sujet' sujet.id %}">{{ sujet.titre }}</a>
-    </li>
-    {% endfor %}
-</ul>
+<div class="container mt-4">
+    <h2 class="mb-3">Liste des Sujets</h2>
+    <ul class="list-group">
+        {% for sujet in sujets %}
+        <li class="list-group-item">
+            <a href="{% url 'detail_sujet' sujet.id %}">{{ sujet.titre }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}

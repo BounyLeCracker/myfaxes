@@ -1,9 +1,16 @@
+<!-- detail_sujet.html -->
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>{{ sujet.titre }}</h2>
-<p>Type: {{ sujet.type_sujet }}</p>
-<p>Cours: {{ sujet.cours.nom }}</p>
-<p>Année: {{ sujet.annee }}</p>
-<a href="{{ sujet.fichier.url }}">Télécharger le sujet</a>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">{{ sujet.titre }}</h2>
+            <p class="card-text"><strong>Type:</strong> {{ sujet.type_sujet }}</p>
+            <p class="card-text"><strong>Cours:</strong> {{ sujet.cours.nom }}</p>
+            <p class="card-text"><strong>Année:</strong> {{ sujet.annee }}</p>
+            <a href="{{ sujet.fichier.url }}" class="btn btn-primary">Télécharger le sujet</a>
+        </div>
+    </div>
+</div>
 {% endblock %}
