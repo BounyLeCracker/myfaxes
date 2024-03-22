@@ -1,6 +1,6 @@
 /* Définition des variables CSS */
 :root {
-    --primary-color: #1e0766;
+    --primary-color: #24155a;
     --secondary-color: #007bff;
     --background-color: #f4f4f4;
     --text-color: #333;
@@ -76,75 +76,10 @@ ul {
     color: var(--secondary-color);
 }
 
-/* Menu hamburger pour les petits écrans */
-.hamburger {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    padding: 1rem;
-    border: none;
-    background: transparent;
-}
-
-.bar {
-    display: block;
-    width: 25px;
-    height: 3px;
-    margin: 5px auto;
-    -webkit-transition: all 0.3s;
-    transition: all 0.3s;
-    background-color: var(--text-color);
-}
-.menu-toggle {
+/* Hamburger menu */
+.hamburger-menu {
     display: none;
 }
-
-.menu-toggle:checked + .hamburger + .nav-menu {
-    display: flex;
-}
-
-
-/* Affichage du menu hamburger sur les petits écrans */
-@media (max-width: 768px) {
-    .hamburger {
-        display: flex;
-    }
-
-    .nav-menu {
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100vh;
-        background: var(--primary-color);
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        transition: left var(--menu-speed) ease;
-    }
-
-    .nav-menu.active {
-        left: 0;
-    }
-
-    .nav-item {
-        margin: 1rem 0;
-    }
-}
-
-/* Animation du menu hamburger lors de l'activation */
-.hamburger.active .bar:nth-child(2) {
-    opacity: 0;
-}
-
-.hamburger.active .bar:nth-child(1) {
-    transform: translateY(8px) rotate(45deg);
-}
-
-.hamburger.active .bar:nth-child(3) {
-    transform: translateY(-8px) rotate(-45deg);
-}
-
 
 /* Footer */
 footer {
@@ -235,6 +170,34 @@ input[type='email']:focus + label {
 
 .container {
     animation: fadeIn 2s ease-in-out;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .navbar ul {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .navbar ul li {
+        text-align: center;
+        width: 100%;
+        padding: 1rem 0;
+    }
+
+    .hamburger-menu {
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        margin-left: auto;
+    }
+
+    .hamburger-menu div {
+        height: 3px;
+        width: 25px;
+        background: #fff;
+        margin: 5px 0;
+    }
 }
 
 @media (max-width: 576px) {
