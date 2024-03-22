@@ -26,5 +26,5 @@ from myfaxes import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.accueil, name='accueil'),
-    path('myfaxes', include('myfaxes.urls')), # Include urls from 'myfaxes' app
+    path('myfaxes/', include('myfaxes.urls')), # Include urls from 'myfaxes' app
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
