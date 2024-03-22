@@ -12,6 +12,7 @@ urlpatterns = [
     path('inscription/', views.register_etudiant, name='register_etudiant'),
     path('connexion/', views.connexion, name='connexion'),
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
-    path('deconnexion/', LogoutView.as_view(next_page='accueil'), name='deconnexion'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('deconnexion/', views.custom_logout, name='custom_logout'),
 ] 
 

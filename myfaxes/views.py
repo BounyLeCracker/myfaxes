@@ -10,7 +10,7 @@ from .forms import SujetForm
 from django.contrib.auth.decorators import login_required, permission_required
 from .models import EtudiantRegistrationForm
 from django.contrib import messages
-
+from django.contrib.auth import logout
 
 
 def connexion(request):
@@ -23,6 +23,10 @@ def connexion(request):
     else:
         form = ConnexionForm()
     return render(request, 'connexion.html', {'form': form})
+
+def custom_logout(request):
+    logout(request)
+    return redirect('../../')
 
 
 def accueil(request):
@@ -66,7 +70,7 @@ def register_etudiant(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Votre compte a été créé avec succès ! Vous pouvez maintenant vous connecter.')
-            return redirect('etudiant_login')  # Redirigez vers la page de connexion
+            return redirect('connexion')  # Redirigez vers la page de connexion
     else:
         form = EtudiantRegistrationForm()
     return render(request, 'register_etudiant.html', {'form': form})
