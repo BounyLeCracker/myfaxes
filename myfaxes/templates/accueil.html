@@ -1,28 +1,46 @@
-<!-- accueil.html -->
 {% extends 'base.html' %}
 
-{% block title %}
-Accueil - Faculté des Sciences
-{% endblock %}
+{% block title %}Accueil - Faculté des Sciences{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-3">Consultation des Sujets en Ligne</h2>
-    <p>Cette plateforme permet aux étudiants de consulter les anciens sujets d'examen, de travaux pratiques et de contrôles continus.</p>
-    <div class="card">
-        <div class="card-body">
-            <h3 class="card-title">Accéder aux sujets</h3>
-            <p class="card-text">Pour trouver un sujet, sélectionnez le cours dans la liste ci-dessous :</p>
-            <form action="{% url 'liste_sujets' %}" method="get" class="form-inline">
-                <select name="cours" class="form-control mr-2" required>
-                    <option value="">Choisir un cours</option>
-                    {% for cours in cours_list %}
-                    <option value="{{ cours.code }}">{{ cours.nom }}</option>
+    <h2>Bienvenue à l'Université de Maroua</h2>
+    <p>Ce site vous permet de consulter les anciens sujets d'examen pour la Faculté des Sciences.</p>
+    
+    <!-- Formulaire pour accéder aux sujets -->
+    <div class="mt-4">
+        <h2>Accéder aux sujets</h2>
+        <p>Pour trouver un sujet, sélectionnez la filière, le niveau et le cours dans le formulaire des cours disponibles et validez :</p>
+        <form method="get" action="{% url 'liste_sujets' %}">
+            <div class="form-group">
+                <label for="filiere">Filière:</label>
+                <select name="filiere" id="filiere" class="form-control">
+                    <!-- Les options de filière devraient être générées dynamiquement -->
+                    {%  for fil in filiere_list %}
+                        <option value="{{ fil }}">{{ fil }}</option>
                     {% endfor %}
                 </select>
-                <button type="submit" class="btn btn-primary">Rechercher</button>
-            </form>
-        </div>
+            </div>
+            <div class="form-group">
+                <label for="niveau">Niveau:</label>
+                <select name="niveau" id="niveau" class="form-control">
+                    <!-- Les options de niveau devraient être générées dynamiquement -->
+                    {%  for fil in niveau_list %}
+                        <option value="{{ fil }}">{{ fil }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="cours">Cours:</label>
+                <select name="cours" id="cours" class="form-control">
+                    <!-- Les options de cours devraient être générées dynamiquement -->
+                    {%  for fil in cours_list %}
+                        <option value="{{ fil }}">{{ fil }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+        </form>
     </div>
 </div>
 {% endblock %}

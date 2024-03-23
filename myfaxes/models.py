@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.db import models
-from django import forms
-from django.core.validators import RegexValidator
-from django.forms.widgets import DateInput
+from django.forms import ModelForm, CharField, PasswordInput, DateInput, EmailField, DateField
+from django.core.exceptions import ValidationError
+
 class Filiere(models.Model):
     nom = models.CharField(max_length=50)
 
@@ -11,8 +11,13 @@ class Filiere(models.Model):
         return self.nom
 
 class Niveau(models.Model):
+    NIVEAU_CHOICES = [
+        ('Nineau 1', 'Nineau 1'),
+        ('Nineau 2', 'Niveau 2'),
+        ('Nineau 3', 'Niveau 3'),
+    ]
     filiere = models.ForeignKey(Filiere, on_delete=models.CASCADE)
-    nom = models.CharField(max_length=10)
+    nom = models.CharField(max_length=10, choices=NIVEAU_CHOICES)
     annee = models.IntegerField()
 
     class Meta:
@@ -24,17 +29,19 @@ class Niveau(models.Model):
 
 class Etudiant(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    cin = models.CharField(max_length=8)
+    cin = models.CharField(max_length=8, validators=[RegexValidator(r'^\d{8}$', 'Entrez un numéro CIN valide.')])
     date_naissance = models.DateField()
     lieu_naissance = models.CharField(max_length=25)
     adresse = models.CharField(max_length=75)
     telephone = models.CharField(max_length=10, validators=[RegexValidator(r'^\d{10}$', 'Entrez un numéro de téléphone valide.')])
     email = models.EmailField(unique=True)
+    USERNAME_FIELD = 'cni'
 
     def __str__(self):
         return f'{self.user.get_full_name()} - {self.cin}'
 
 class Cours(models.Model):
+    niveau = models.ForeignKey(Niveau, on_delete=models.CASCADE, )
     nom = models.CharField(max_length=100)
     code = models.CharField(max_length=10, unique=True)
 
@@ -43,6 +50,7 @@ class Cours(models.Model):
 
 class Sujet(models.Model):
     TYPE_SUJET_CHOICES = [
+        ('TD', 'Travaux Dirigés'),
         ('TPE', 'Travaux Pratiques Encadrés'),
         ('CC', 'Contrôle Continu'),
         ('EXAM', 'Examen'),
@@ -56,42 +64,31 @@ class Sujet(models.Model):
     def __str__(self):
         return f"{self.titre} ({self.get_type_sujet_display()})"
 
+from django.contrib.auth.forms import UserCreationForm
+from django import forms
+from .models import Etudiant
 
-class EtudiantRegistrationForm(forms.ModelForm):
-    username = forms.CharField(label='Nom d\'utilisateur', max_length=150)
-    password = forms.CharField(label='Mot de passe', widget=forms.PasswordInput)
-    confirm_password = forms.CharField(label='Confirmez le mot de passe', widget=forms.PasswordInput)
+class EtudiantRegistrationForm(UserCreationForm):
     cin = forms.CharField(label='CIN', max_length=8)
-    date_naissance = forms.DateField(label='Date de naissance', widget=DateInput(attrs={'type': 'date'}))
+    date_naissance = forms.DateField(label='Date de naissance', widget=forms.DateInput(attrs={'type': 'date'}))
     lieu_naissance = forms.CharField(label='Lieu de naissance', max_length=25)
     adresse = forms.CharField(label='Adresse', max_length=75)
     telephone = forms.CharField(label='Téléphone', max_length=10, validators=[RegexValidator(r'^\d{10}$', 'Entrez un numéro de téléphone valide.')])
     email = forms.EmailField(label='Email')
 
-    class Meta:
-        model = Etudiant
-        fields = ('cin', 'date_naissance', 'lieu_naissance', 'adresse', 'telephone', 'email')
-
-    def clean(self):
-        cleaned_data = super().clean()
-        password = cleaned_data.get("password")
-        confirm_password = cleaned_data.get("confirm_password")
-
-        if password != confirm_password:
-            raise forms.ValidationError(
-                "Les mots de passe ne correspondent pas."
-            )
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = UserCreationForm.Meta.fields + ('email',)
 
     def save(self, commit=True):
-        user = User.objects.create_user(
-            username=self.cleaned_data['username'],
-            password=self.cleaned_data['password'],
+        user = super().save(commit=commit)  # UserCreationForm's save method will handle user creation
+        etudiant = Etudiant.objects.create(
+            user=user,
+            cin=self.cleaned_data['cin'],
+            date_naissance=self.cleaned_data['date_naissance'],
+            lieu_naissance=self.cleaned_data['lieu_naissance'],
+            adresse=self.cleaned_data['adresse'],
+            telephone=self.cleaned_data['telephone'],
             email=self.cleaned_data['email']
         )
-        etudiant = super(EtudiantRegistrationForm, self).save(commit=False)
-        etudiant.user = user
-
-        if commit:
-            etudiant.save()
-
         return etudiant

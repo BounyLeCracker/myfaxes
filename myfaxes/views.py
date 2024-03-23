@@ -1,17 +1,9 @@
-from django.contrib.auth import login
-from .forms import ConnexionForm
-from pyexpat.errors import messages
-from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
-from django.http import Http404
-from django.shortcuts import get_object_or_404, render, redirect
-from .models import Cours, Sujet
-from .forms import SujetForm
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required, permission_required
-from .models import EtudiantRegistrationForm
 from django.contrib import messages
-from django.contrib.auth import logout
-
+from django.shortcuts import render, get_object_or_404, redirect
+from .forms import ConnexionForm, SujetForm, EtudiantRegistrationForm
+from .models import Cours, Sujet, Filiere, Niveau
 
 def connexion(request):
     if request.method == 'POST':
@@ -19,37 +11,53 @@ def connexion(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('accueil')  # Redirige vers la page d'accueil après la connexion
+            messages.success(request, 'Vous êtes maintenant connecté.')
+            return redirect('accueil')
     else:
         form = ConnexionForm()
     return render(request, 'connexion.html', {'form': form})
 
 def custom_logout(request):
     logout(request)
-    return redirect('../../')
+    messages.info(request, 'Vous avez été déconnecté.')
+    return redirect('accueil')
 
 
 def accueil(request):
+    # Récupérer toutes les filières, niveaux et cours pour les passer au template
+    filieres = Filiere.objects.all()
+    niveaux = Niveau.objects.all()
     cours = Cours.objects.all()
-    return render(request, 'accueil.html', {'cours_list': cours})
+    return render(request, 'accueil.html', {
+        'filiere_list': filieres,
+        'niveau_list': niveaux,
+        'cours_list': cours
+    })
 
 def liste_sujets(request):
+    # Récupérer les paramètres du formulaire
+    filiere_nom = request.GET.get('filiere')
+    niveau_nom = request.GET.get('niveau')
     cours_code = request.GET.get('cours')
-    if cours_code:
-        sujets = Sujet.objects.filter(cours__code=cours_code).select_related('cours')
+
+    # Filtrer les sujets en fonction des paramètres du formulaire
+    if filiere_nom and niveau_nom and cours_code:
+        sujets = Sujet.objects.filter(
+            cours__code=cours_code,
+            cours__niveau__filiere__nom=filiere_nom,
+            cours__niveau__nom=niveau_nom
+        ).select_related('cours')
     else:
         sujets = Sujet.objects.all().select_related('cours')
+
     cours_list = Cours.objects.all()
     return render(request, 'liste_sujets.html', {'sujets': sujets, 'cours_list': cours_list})
 
 def detail_sujet(request, sujet_id):
-    try:
-        sujet = get_object_or_404(Sujet, id=sujet_id)
-    except Http404:
-        return render(request, '404.html', status=404)
+    sujet = get_object_or_404(Sujet, id=sujet_id)
     return render(request, 'detail_sujet.html', {'sujet': sujet})
 
-@login_required(login_url='accueil')  # Redirige vers 'accueil' si l'utilisateur n'est pas connecté
+@login_required(login_url='connexion')
 @permission_required('app.add_sujet', raise_exception=True)
 def ajouter_sujet(request):
     if request.method == 'POST':
