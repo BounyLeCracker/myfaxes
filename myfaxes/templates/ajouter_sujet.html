@@ -2,8 +2,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-3">Ajouter un Sujet</h2>
+<div class="container">
+    <h2>Ajouter un Sujet</h2>
     <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
         {% csrf_token %}
         <div class="form-group">

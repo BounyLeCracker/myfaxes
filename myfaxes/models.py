@@ -1,8 +1,10 @@
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import RegexValidator
 from django.db import models
 from django.forms import ModelForm, CharField, PasswordInput, DateInput, EmailField, DateField
 from django.core.exceptions import ValidationError
+
 
 class Filiere(models.Model):
     nom = models.CharField(max_length=50)
@@ -25,7 +27,7 @@ class Niveau(models.Model):
         verbose_name_plural = "niveaux"
 
     def __str__(self):
-        return f"{self.filiere.nom} - {self.nom} - {self.annee}"
+        return f"{self.nom}"
 
 class Etudiant(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -64,24 +66,20 @@ class Sujet(models.Model):
     def __str__(self):
         return f"{self.titre} ({self.get_type_sujet_display()})"
 
-from django.contrib.auth.forms import UserCreationForm
-from django import forms
-from .models import Etudiant
-
 class EtudiantRegistrationForm(UserCreationForm):
-    cin = forms.CharField(label='CIN', max_length=8)
-    date_naissance = forms.DateField(label='Date de naissance', widget=forms.DateInput(attrs={'type': 'date'}))
-    lieu_naissance = forms.CharField(label='Lieu de naissance', max_length=25)
-    adresse = forms.CharField(label='Adresse', max_length=75)
-    telephone = forms.CharField(label='Téléphone', max_length=10, validators=[RegexValidator(r'^\d{10}$', 'Entrez un numéro de téléphone valide.')])
-    email = forms.EmailField(label='Email')
+    cin = CharField(label='CIN', max_length=8)
+    date_naissance = DateField(label='Date de naissance', widget=DateInput(attrs={'type': 'date'}))
+    lieu_naissance = CharField(label='Lieu de naissance', max_length=25)
+    adresse = CharField(label='Adresse', max_length=75)
+    telephone = CharField(label='Téléphone', max_length=10, validators=[RegexValidator(r'^\d{10}$', 'Entrez un numéro de téléphone valide.')])
+    email = EmailField(label='Email')
 
     class Meta(UserCreationForm.Meta):
         model = User
         fields = UserCreationForm.Meta.fields + ('email',)
 
     def save(self, commit=True):
-        user = super().save(commit=commit)  # UserCreationForm's save method will handle user creation
+        user = super().save(commit=commit)
         etudiant = Etudiant.objects.create(
             user=user,
             cin=self.cleaned_data['cin'],
