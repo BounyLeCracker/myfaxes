@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.grid.min.css">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body class="min-vh-100">
+<body>
     <!-- Barre de navigation avec Bootstrap -->
     <nav class="navbar navbar-expand-lg navbar-light bg-primary fixed-top">
         <a class="navbar-brand" href="{% url 'accueil' %}">Université de Maroua</a>
@@ -42,7 +42,7 @@
         </div>
     </nav>
 
-    <main class="min-vh-100">
+    <main class="main">
     <!-- Contenu principal -->
     {% block content %}{% endblock %}
     </main>

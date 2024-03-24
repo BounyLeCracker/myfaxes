@@ -45,6 +45,9 @@ nav ul li a:hover {
 }
 
 /* Contenu principal */
+.main {
+    min-height: 93.4vh;
+}
 .container {
     padding: 2rem;
 }
